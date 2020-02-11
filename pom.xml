@@ -18,6 +18,7 @@
         <module>guli-weibo</module>
         <module>kylin-demo</module>
         <module>spark-demo</module>
+        <module>flink-demo</module>
     </modules>
 
 
