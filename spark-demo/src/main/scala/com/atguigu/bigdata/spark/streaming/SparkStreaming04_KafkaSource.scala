@@ -11,16 +11,16 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
   * 创建topic命令：
   * bin/kafka-topics.sh \
   * --create \
-  * --zookeeper hadoop100:2181,hadoop101:2181,hadoop102:2181/kafka \
-  * --replication-factor 2 \
+  * --zookeeper hadoop100:2181,hadoop101:2181,hadoop102:2181 \
+  * --replication-factor 3 \
   * --partitions 3 \
-  * --topic auguigu
+  * --topic atguigu
   *
-  * 查询topic命令：
-  * bin/kafka-topics.sh --zookeeper hadoop100:2181,hadoop101:2181,hadoop102:2181/kafka --list
+  * 查询
+  * bin/kafka-topics.sh --zookeeper hadoop100:2181,hadoop101:2181,hadoop102:2181 --list
   *
   * 生产数据命令：
-  * bin/kafka-console-producer.sh --broker-list hadoop100:9092,hadoop101:9092,hadoop102:9092 --topic auguigu
+  * bin/kafka-console-producer.sh --broker-list hadoop100:9092,hadoop101:9092,hadoop102:9092 --topic atguigu
   *
   * 需要添加中的org/apache/spark/Logging类
   * <dependency>
@@ -43,7 +43,7 @@ object SparkStreaming04_KafkaSource {
     val streamingContext = new StreamingContext(sparkConf, Seconds(3))
 
     // 从kafka中采集数据
-    val kafkaDStream: ReceiverInputDStream[(String, String)] = KafkaUtils.createStream(streamingContext, "hadoop100:2181,hadoop101:2181,hadoop102:2181/kafka", "auguigu", Map("auguigu" -> 3))
+    val kafkaDStream: ReceiverInputDStream[(String, String)] = KafkaUtils.createStream(streamingContext, "hadoop100:2181,hadoop101:2181,hadoop102:2181", "atguigu", Map("atguigu" -> 3))
 
     // 将采集的数据进行分解（扁平化）
     val wordDStream: DStream[String] = kafkaDStream.flatMap(t=>t._2.split(" "))
