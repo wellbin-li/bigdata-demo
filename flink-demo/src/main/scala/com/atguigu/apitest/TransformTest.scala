@@ -1,5 +1,6 @@
 package com.atguigu.apitest
 
+import org.apache.flink.api.common.functions.{FilterFunction, RichMapFunction}
 import org.apache.flink.streaming.api.scala._
 
 object TransformTest {
@@ -49,12 +50,23 @@ object TransformTest {
 
     // union 和connect的区别：1.connect只能操作两个流，union可以操作多个 2.union之前的两个流的类型必须一样，connect可以不一
     // 样，可以通过coMap调成一样
-    val unionStream: DataStream[SensorReading] = high.union(low).union(all)
-    unionStream.print()
+    //    val unionStream: DataStream[SensorReading] = high.union(low).union(all)
+    //    unionStream.print()
 
+    // 函数类
+    // dataStream.filter(new MyFilter()).print()
+
+    // 匿名函数
+    dataStream.filter(_.id.startsWith("sensor_1")).print()
 
     env.execute("transform test")
 
   }
 
+}
+
+class MyFilter() extends FilterFunction[SensorReading] {
+  override def filter(t: SensorReading): Boolean = {
+    t.id.startsWith("sensor_1")
+  }
 }
